@@ -50,7 +50,7 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
   }
 
   Widget phonetabletDesign(BuildContext context) {
-    print('phoneDesign Başlatıldı!');
+    print('phoneDesign başlatıldı!');
     var nowTime = DateTime.now().toLocal();
     var nowTimeHour = nowTime.hour;
     var nowTimeMinute = nowTime.minute;
