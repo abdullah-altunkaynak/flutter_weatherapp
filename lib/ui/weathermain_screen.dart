@@ -74,7 +74,7 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
               Container(
                 width: width,
                 height: height,
-                color: Color.fromRGBO(0, 0, 0, 0.5),
+                color: c.nowHour >= 18 || c.nowHour < 06 ? Color.fromRGBO(0, 0, 0, 0.5) : Color.fromRGBO(0, 0, 0, 0.7),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,

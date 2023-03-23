@@ -14,7 +14,7 @@ Widget DayWeatherCard({double celcius = -999, String hour = 'Now'}) {
     children: [
       Text(hour, style: TextStyle(color: Colors.white, fontSize: fontSize),),
 
-          Icon(iconData, color: iconData == Icons.sunny ? Colors.yellow : Colors.blue.shade700, size: fontSize,),
+          Icon(iconData, color: iconData == Icons.sunny ? Colors.yellow : Color.fromARGB(255, 115, 115, 115), size: fontSize,),
           MarginWidget(width: 10),
           Text('$celcius°C', style: TextStyle(color: Colors.white, fontSize: fontSize),),
     ],

@@ -27,12 +27,12 @@ Widget weeklyWeatherCard({String date = '', double celcius = -999}) {
       children: [
         Expanded(flex: 3, child: Text(
           '$weekday - ' + date.replaceAll(r'T', ' ').split(' ')[1],
-          style: TextStyle(color: Colors.white, fontSize: fontSize / 1.3),
+          style: TextStyle(color: Colors.white, fontSize: fontSize / 1.4),
           textAlign: TextAlign.center,
         )),
         Expanded(flex: 1, child: Icon(
           celcius > WeatherController.to.seperatorColdHotValue.value ? Icons.sunny : Icons.cloud,
-          color: celcius > WeatherController.to.seperatorColdHotValue.value ? Colors.yellow : Colors.blue,
+          color: celcius > WeatherController.to.seperatorColdHotValue.value ? Colors.yellow : Color.fromARGB(255, 115, 115, 115),
           size: fontSize,
         )),
         Expanded(flex: 2, child: Text(
