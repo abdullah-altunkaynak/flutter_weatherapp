@@ -28,6 +28,7 @@ class WeatherController extends GetxController {
   Rx<int> seperatorColdHotValue = 7.obs;
   Rx<Position>? position; // latitude ve longitude
   Rx<Placemark>? place; // country vs.
+  // Api -> https://open-meteo.com/en/docs#latitude=39.75&longitude=30.47&hourly=temperature_2m
   // geolocator ile burada konum çekip apide latitude ve longitude değerine göre request atılabilir.
   RxString baseUrl =
       'https://api.open-meteo.com/v1/forecast?latitude=39.75&longitude=30.47&hourly=temperature_2m'
