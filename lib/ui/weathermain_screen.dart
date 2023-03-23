@@ -63,14 +63,16 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
                   width: width,
                   height: height,
                   child: Image.network(
-                    'https://w0.peakpx.com/wallpaper/978/53/HD-wallpaper-sunny-day-blue-clouds-light-sky.jpg',
-                    fit: BoxFit.fitWidth,
+                    c.nowHour >= 18 || c.nowHour < 06
+                        ? 'https://wallpapers.com/images/hd/stars-4k-ultra-hd-dark-phone-sv17rfy2thpwos20.jpg'
+                        : 'https://w0.peakpx.com/wallpaper/978/53/HD-wallpaper-sunny-day-blue-clouds-light-sky.jpg',
+                    fit: BoxFit.cover,
                   )),
               // karanlık efekt
               Container(
                 width: width,
                 height: height,
-                color: Color.fromRGBO(0, 0, 0, 0.8),
+                color: Color.fromRGBO(0, 0, 0, 0.5),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -87,7 +89,9 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
                           size: 50,
                         ),
                         Text(
-                          c.place?.value.locality != null ? c.place!.value.locality.toString()  : 'Eskişehir',
+                          c.place != null
+                              ? c.place!.value.locality.toString()
+                              : 'Eskişehir',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: width / 70 + height / 70),
@@ -106,17 +110,17 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
                   MarginWidget(height: 10),
                   Expanded(
                       flex: 3,
-                      child:
-                          DayWeatherCard(celcius: c.weatherNow?.value ?? -999)),
-                  //         CarouselSlider(
-                  //   options: CarouselOptions(),
-                  //   items: list
-                  //       .map((item) => Container(
-                  //             child: Center(child: Text(item.toString())),
-                  //             color: Colors.green,
-                  //           ))
-                  //       .toList(),
-                  // )
+                      child: ListView.builder(
+                        itemCount: c.weatherToday.length,
+                        itemBuilder: (context, index) {
+                          return DayWeatherCard(
+                              celcius: c.weatherToday.value[index][1] ?? -999,
+                              hour: index == 0
+                                  ? 'Now'
+                                  : c.weatherToday.value[index][0] ?? 'Now');
+                        },
+                        scrollDirection: Axis.horizontal,
+                      )),
                   Expanded(
                       flex: 10,
                       child: Padding(
@@ -124,20 +128,24 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
                           child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                color: Color.fromRGBO(158, 158, 158, 0.3)),
-                            width: Sizes.getWidth(),
-                            height: Sizes.getHeight() / 4,
+                                color: Color.fromRGBO(36, 58, 70, 0.394)),
+                            width: width,
+                            height: height / 4,
                             child: ListView.builder(
                                 itemCount:
-                                    c.weather?.value.hourly?.time?.length,
+                                    c.weather?.value.hourly?.time?.length ?? 0,
                                 itemBuilder: ((context, index) {
-                                  return weeklyWeatherCard(
-                                      date: c.weather?.value.hourly
-                                              ?.time?[index] ??
-                                          '',
-                                      celcius: c.weather?.value.hourly
-                                              ?.temperature2m?[index] ??
-                                          -999);
+                                  if (index % 12 == 0) {
+                                    return weeklyWeatherCard(
+                                        date: c.weather?.value.hourly
+                                                ?.time?[index] ??
+                                            '',
+                                        celcius: c.weather?.value.hourly
+                                                ?.temperature2m?[index] ??
+                                            -999);
+                                  } else {
+                                    return SizedBox.shrink();
+                                  }
                                 })),
                           ))),
                 ],
