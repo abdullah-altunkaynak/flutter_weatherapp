@@ -58,8 +58,7 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
     var nowTimeHour = nowTime.hour;
     var nowTimeMinute = nowTime.minute;
     return Obx(() => Scaffold(
-          body: SafeArea(
-              child: Stack(
+          body:  Stack(
             children: [
               // arkaplan resim
               Container(
@@ -68,19 +67,20 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
                   child: Image.network(
                     c.nowHour >= 18 || c.nowHour < 06
                         ? 'https://wallpapers.com/images/hd/stars-4k-ultra-hd-dark-phone-sv17rfy2thpwos20.jpg'
-                        : 'https://w0.peakpx.com/wallpaper/978/53/HD-wallpaper-sunny-day-blue-clouds-light-sky.jpg',
+                        : 'https://w0.peakpx.com/wallpaper/592/128/HD-wallpaper-clouds-sky-cloudy-day.jpg',
                     fit: BoxFit.cover,
                   )),
               // karanlık efekt
               Container(
                 width: width,
                 height: height,
-                color: Color.fromRGBO(0, 0, 0, 0.6),
+                color: Color.fromRGBO(0, 0, 0, 0.5),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  MarginWidget(height: 10),
                   Expanded(
                     flex: 2,
                     child: Row(
@@ -158,7 +158,7 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
                 ],
               )
             ],
-          )),
+          ),
         ));
   }
 
