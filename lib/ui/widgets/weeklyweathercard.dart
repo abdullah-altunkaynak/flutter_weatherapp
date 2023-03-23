@@ -9,7 +9,6 @@ Widget weeklyWeatherCard({String date = '', double celcius = -999}) {
   try{
   DateTime datetimeDate = DateTime.parse(date);
   hour = int.parse(date.split('T')[1].split(':')[0]);
-  print(hour);
   weekday = DateFormat('EEEE').format(datetimeDate);}catch(error){
     print('in weeklyWeatherCard widget, datetime convert error: ' + error.toString());
   }
@@ -19,8 +18,8 @@ Widget weeklyWeatherCard({String date = '', double celcius = -999}) {
   return Center(
       child: Container(
     decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.white),),
-        color: hour > 17 || hour < 6 ? Color.fromARGB(126, 28, 28, 28) : Color.fromRGBO(90, 146, 175, 0.5)),
+       borderRadius: BorderRadius.all(Radius.circular(10)),
+        color: hour > 17 || hour < 6 ? Color.fromRGBO(28, 28, 28, 0.8) : Color.fromRGBO(55, 188, 254, 0.8)),
     padding: EdgeInsets.all(20),
     width: width,
     child: Row(

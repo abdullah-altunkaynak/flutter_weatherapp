@@ -50,6 +50,9 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
   }
 
   Widget phonetabletDesign(BuildContext context) {
+    // Timer(Duration(seconds: 5), () async {
+    //   print('timer çalıştı');
+    // });
     print('phoneDesign başlatıldı!');
     var nowTime = DateTime.now().toLocal();
     var nowTimeHour = nowTime.hour;
@@ -72,7 +75,7 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
               Container(
                 width: width,
                 height: height,
-                color: Color.fromRGBO(0, 0, 0, 0.5),
+                color: Color.fromRGBO(0, 0, 0, 0.6),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -85,8 +88,8 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
                       children: [
                         Icon(
                           Icons.location_on,
-                          color: Colors.orange,
-                          size: 50,
+                          color: Colors.white,
+                          size: width / 70 + height / 70,
                         ),
                         Text(
                           c.place != null
@@ -127,8 +130,8 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
                           padding: EdgeInsets.all(10),
                           child: Container(
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Color.fromRGBO(36, 58, 70, 0.394)),
+                                // borderRadius: BorderRadius.circular(8),
+                                ),
                             width: width,
                             height: height / 4,
                             child: ListView.builder(
@@ -136,13 +139,17 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
                                     c.weather?.value.hourly?.time?.length ?? 0,
                                 itemBuilder: ((context, index) {
                                   if (index % 12 == 0) {
-                                    return weeklyWeatherCard(
-                                        date: c.weather?.value.hourly
-                                                ?.time?[index] ??
-                                            '',
-                                        celcius: c.weather?.value.hourly
-                                                ?.temperature2m?[index] ??
-                                            -999);
+                                    return InkWell(
+                                        onTap: () {
+                                          print('tıklandı');
+                                        },
+                                        child: weeklyWeatherCard(
+                                            date: c.weather?.value.hourly
+                                                    ?.time?[index] ??
+                                                '',
+                                            celcius: c.weather?.value.hourly
+                                                    ?.temperature2m?[index] ??
+                                                -999));
                                   } else {
                                     return SizedBox.shrink();
                                   }
