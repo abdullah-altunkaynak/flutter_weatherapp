@@ -24,8 +24,8 @@ class WeatherController extends GetxController {
     ['Now', -999.0]
   ].obs; // 0.index saat, 1.index sıcaklık
   RxList weatherforDetail = [
-    ['Now', -999.0]
-  ].obs; // detay sayfasında istenen gün için özel olarak çekilmiş veriler
+    ['Now', -999.0, 10, 10.0, 10.0, 10]
+  ].obs; // detay sayfasında istenen gün için özel olarak çekilmiş veriler (0. saat, 1. sıcaklık, 2.yağış olasılığı, 3.toplam yağış, 4.rüzgar hızı, 5.hava kodu)
   Rx<int> seperatorColdHotValue = 7.obs;
   Rx<Position>? position; // latitude ve longitude
   Rx<Placemark>? place; // country vs.
@@ -53,6 +53,7 @@ class WeatherController extends GetxController {
 
   setWeather({bool forNow = true, String? dateForDetail}) {
     var index = 0;
+    print('forNow: ' + forNow.toString());
     // forNow eğer true ise bugünün verilerini ayarlamak istiyoruzdur
     if (forNow) {
       weatherToday.clear();
@@ -77,8 +78,10 @@ class WeatherController extends GetxController {
             weatherNow = weather!.value.hourly!.temperature2m![index].obs;
           }
           if (int.parse(hour) >= int.parse(nowHour))
-            weatherToday.value
-                .add([hour, weather!.value.hourly!.temperature2m![index]]);
+            weatherToday.value.add([
+              hour,
+              weather!.value.hourly!.temperature2m![index],
+            ]);
         }
         index++;
       });
@@ -87,6 +90,7 @@ class WeatherController extends GetxController {
     else {
       weatherforDetail.clear();
       if (dateForDetail != null) {
+        print('dateForDetail boş değil');
         weather?.value.hourly?.time?.forEach((element) {
           var splitDate = element.replaceAll(r'T', ' ').split(' ');
           var date = splitDate.first; // 2023-03-22
@@ -103,8 +107,15 @@ class WeatherController extends GetxController {
               .last; // 22
           if (day == dayForDetail) // istenen günün tarihi olan hava durumu
           {
-            weatherforDetail.value
-                .add([hour, weather!.value.hourly!.temperature2m![index]]);
+            print('ekleme yapacak');
+            weatherforDetail.value.add([
+              hour,
+              weather!.value.hourly!.temperature2m![index],
+              weather!.value.hourly!.precipitationProbability![index],
+              weather!.value.hourly!.precipitation![index],
+              weather!.value.hourly!.windspeed10m![index],
+              weather!.value.hourly!.weathercode![index]
+            ]);
           }
           index++;
         });

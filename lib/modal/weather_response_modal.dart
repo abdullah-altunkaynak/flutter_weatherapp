@@ -97,7 +97,7 @@ class Hourly {
   List<int>? precipitationProbability;
   List<double>? precipitation;
   List<int>? weathercode;
-  List<int>? windspeed10m;
+  List<double>? windspeed10m;
 
   Hourly(
       {this.time,
@@ -113,7 +113,7 @@ class Hourly {
     precipitationProbability = json['precipitation_probability'].cast<int>();
     precipitation = json['precipitation'].cast<double>();
     weathercode = json['weathercode'].cast<int>();
-    windspeed10m = json['windspeed_10m'].cast<int>();
+    windspeed10m = json['windspeed_10m'].cast<double>();
   }
 
   Map<String, dynamic> toJson() {
