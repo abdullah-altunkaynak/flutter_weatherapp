@@ -10,6 +10,7 @@ import 'package:flutter_weatherapp/ui/widgets/platform_widget.dart';
 import 'package:get/get.dart';
 
 import '../utils/sizes.dart';
+import 'widgets/background.dart';
 import 'widgets/weeklyweathercard.dart';
 
 class WeatherMainScreen extends StatefulWidget {
@@ -17,8 +18,7 @@ class WeatherMainScreen extends StatefulWidget {
   State<WeatherMainScreen> createState() => _WeatherMainScreenState();
 }
 
-class _WeatherMainScreenState extends State<WeatherMainScreen>
-    with TickerProviderStateMixin {
+class _WeatherMainScreenState extends State<WeatherMainScreen>{
   var width = Sizes.getWidth();
   var height = Sizes.getHeight();
   WeatherController c = Get.put(WeatherController());
@@ -61,21 +61,7 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
           body:  Stack(
             children: [
               // arkaplan resim
-              Container(
-                  width: width,
-                  height: height,
-                  child: Image.network(
-                    c.nowHour >= 18 || c.nowHour < 06
-                        ? 'https://wallpapers.com/images/hd/stars-4k-ultra-hd-dark-phone-sv17rfy2thpwos20.jpg'
-                        : 'https://w0.peakpx.com/wallpaper/592/128/HD-wallpaper-clouds-sky-cloudy-day.jpg',
-                    fit: BoxFit.cover,
-                  )),
-              // karanlık efekt
-              Container(
-                width: width,
-                height: height,
-                color: c.nowHour >= 18 || c.nowHour < 06 ? Color.fromRGBO(0, 0, 0, 0.5) : Color.fromRGBO(0, 0, 0, 0.7),
-              ),
+              Background(width: width, height: height, night: nowTimeHour >= 18 || nowTimeHour < 06),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -141,7 +127,12 @@ class _WeatherMainScreenState extends State<WeatherMainScreen>
                                   if (index % 12 == 0) {
                                     return InkWell(
                                         onTap: () {
-                                          print('tıklandı');
+                                          c.setWeather(forNow: false, dateForDetail: c.weather?.value.hourly
+                                                    ?.time?[index] ??
+                                                '');
+                                          Get.toNamed('day-detail-screen', arguments: {'day': c.weather?.value.hourly
+                                                    ?.time?[index] ??
+                                                ''});
                                         },
                                         child: weeklyWeatherCard(
                                             date: c.weather?.value.hourly

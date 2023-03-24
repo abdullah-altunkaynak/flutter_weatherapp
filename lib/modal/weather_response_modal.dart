@@ -1,4 +1,4 @@
-class WeatherResponseModel {
+class WeatherResponseModal {
   double? latitude;
   double? longitude;
   double? generationtimeMs;
@@ -9,7 +9,7 @@ class WeatherResponseModel {
   HourlyUnits? hourlyUnits;
   Hourly? hourly;
 
-  WeatherResponseModel(
+  WeatherResponseModal(
       {this.latitude,
       this.longitude,
       this.generationtimeMs,
@@ -20,7 +20,7 @@ class WeatherResponseModel {
       this.hourlyUnits,
       this.hourly});
 
-  WeatherResponseModel.fromJson(Map<String, dynamic> json) {
+  WeatherResponseModal.fromJson(Map<String, dynamic> json) {
     latitude = json['latitude'];
     longitude = json['longitude'];
     generationtimeMs = json['generationtime_ms'];
@@ -57,18 +57,36 @@ class WeatherResponseModel {
 class HourlyUnits {
   String? time;
   String? temperature2m;
+  String? precipitationProbability;
+  String? precipitation;
+  String? weathercode;
+  String? windspeed10m;
 
-  HourlyUnits({this.time, this.temperature2m});
+  HourlyUnits(
+      {this.time,
+      this.temperature2m,
+      this.precipitationProbability,
+      this.precipitation,
+      this.weathercode,
+      this.windspeed10m});
 
   HourlyUnits.fromJson(Map<String, dynamic> json) {
     time = json['time'];
     temperature2m = json['temperature_2m'];
+    precipitationProbability = json['precipitation_probability'];
+    precipitation = json['precipitation'];
+    weathercode = json['weathercode'];
+    windspeed10m = json['windspeed_10m'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['time'] = this.time;
     data['temperature_2m'] = this.temperature2m;
+    data['precipitation_probability'] = this.precipitationProbability;
+    data['precipitation'] = this.precipitation;
+    data['weathercode'] = this.weathercode;
+    data['windspeed_10m'] = this.windspeed10m;
     return data;
   }
 }
@@ -76,18 +94,36 @@ class HourlyUnits {
 class Hourly {
   List<String>? time;
   List<double>? temperature2m;
+  List<int>? precipitationProbability;
+  List<double>? precipitation;
+  List<int>? weathercode;
+  List<int>? windspeed10m;
 
-  Hourly({this.time, this.temperature2m});
+  Hourly(
+      {this.time,
+      this.temperature2m,
+      this.precipitationProbability,
+      this.precipitation,
+      this.weathercode,
+      this.windspeed10m});
 
   Hourly.fromJson(Map<String, dynamic> json) {
     time = json['time'].cast<String>();
     temperature2m = json['temperature_2m'].cast<double>();
+    precipitationProbability = json['precipitation_probability'].cast<int>();
+    precipitation = json['precipitation'].cast<double>();
+    weathercode = json['weathercode'].cast<int>();
+    windspeed10m = json['windspeed_10m'].cast<int>();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['time'] = this.time;
     data['temperature_2m'] = this.temperature2m;
+    data['precipitation_probability'] = this.precipitationProbability;
+    data['precipitation'] = this.precipitation;
+    data['weathercode'] = this.weathercode;
+    data['windspeed_10m'] = this.windspeed10m;
     return data;
   }
 }

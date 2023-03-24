@@ -12,8 +12,9 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherController extends GetxController {
-  Rx<WeatherResponseModel>? weather = new WeatherResponseModel().obs;
+  Rx<WeatherResponseModal>? weather = new WeatherResponseModal().obs;
   RxInt nowHour = DateTime.now().toLocal().hour.obs;
+
   /// haftanın her gününün bir örneğini burada tutup haftalık değerler kısmında gösterebiliriz.
   RxList<List<String>> weeklyHourTemperature = [
     ['', '']
@@ -22,16 +23,16 @@ class WeatherController extends GetxController {
   RxList weatherToday = [
     ['Now', -999.0]
   ].obs; // 0.index saat, 1.index sıcaklık
-  RxList weatherWeekly = [
+  RxList weatherforDetail = [
     ['Now', -999.0]
-  ].obs; // 0.index gün 1.index en düşük sıcaklık 2.index en yüksek sıcaklık
+  ].obs; // detay sayfasında istenen gün için özel olarak çekilmiş veriler
   Rx<int> seperatorColdHotValue = 7.obs;
   Rx<Position>? position; // latitude ve longitude
   Rx<Placemark>? place; // country vs.
   // Api -> https://open-meteo.com/en/docs#latitude=39.75&longitude=30.47&hourly=temperature_2m
   // geolocator ile burada konum çekip apide latitude ve longitude değerine göre request atılabilir.
   RxString baseUrl =
-      'https://api.open-meteo.com/v1/forecast?latitude=39.75&longitude=30.47&hourly=temperature_2m'
+      'https://api.open-meteo.com/v1/forecast?latitude=39.75&longitude=30.47&hourly=temperature_2m,precipitation_probability,precipitation,weathercode,windspeed_10m'
           .obs;
   static WeatherController to = Get.find();
   @override
@@ -46,42 +47,69 @@ class WeatherController extends GetxController {
       throw Exception('error getting weather for location');
     }
     final weatherJson = jsonDecode(weatherResponse.body);
-    weather?.value = WeatherResponseModel.fromJson(weatherJson);
-    setWeatherNow();
+    weather?.value = WeatherResponseModal.fromJson(weatherJson);
+    setWeather();
   }
 
-  setWeatherNow() {
-    weatherToday.clear();
-    weatherWeekly.clear();
+  setWeather({bool forNow = true, String? dateForDetail}) {
     var index = 0;
-    var nowDate = DateTime.now().toLocal();
-    var nowHour = nowDate.hour.toString();
-    var nowDay = nowDate.day.toString();
-    var dayforWeeklyList;
-    if (nowHour.length == 1) {
-      nowHour = '0$nowHour';
-    }
-    if (nowDay.length == 1) {
-      nowDay = '0$nowDay';
-    }
-    var tempArray = weatherWeekly;
-    weather?.value.hourly?.time?.forEach((element) {
-      var splitDate = element.replaceAll(r'T', ' ').split(' ');
-      var date = splitDate.first; // 2023-03-22
-      var hourminute = splitDate.last; // 14:00
-      var day = date.replaceAll(r'-', ' ').split(' ').last; // 22
-      var hour = hourminute.replaceAll(r':', ' ').split(' ').first;
-      dayforWeeklyList = day;
-      if (day == nowDay) // bugünün tarihi olan hava durumu
-      {
-        if (hour == nowHour) {
-          weatherNow = weather!.value.hourly!.temperature2m![index].obs;
-        }
-        if (int.parse(hour) >= int.parse(nowHour))
-          weatherToday.value
-              .add([hour, weather!.value.hourly!.temperature2m![index]]);
+    // forNow eğer true ise bugünün verilerini ayarlamak istiyoruzdur
+    if (forNow) {
+      weatherToday.clear();
+      var nowDate = DateTime.now().toLocal();
+      var nowHour = nowDate.hour.toString();
+      var nowDay = nowDate.day.toString();
+      if (nowHour.length == 1) {
+        nowHour = '0$nowHour';
       }
-      index++;
-    });
+      if (nowDay.length == 1) {
+        nowDay = '0$nowDay';
+      }
+      weather?.value.hourly?.time?.forEach((element) {
+        var splitDate = element.replaceAll(r'T', ' ').split(' ');
+        var date = splitDate.first; // 2023-03-22
+        var hourminute = splitDate.last; // 14:00
+        var day = date.replaceAll(r'-', ' ').split(' ').last; // 22
+        var hour = hourminute.replaceAll(r':', ' ').split(' ').first;
+        if (day == nowDay) // bugünün tarihi olan hava durumu
+        {
+          if (hour == nowHour) {
+            weatherNow = weather!.value.hourly!.temperature2m![index].obs;
+          }
+          if (int.parse(hour) >= int.parse(nowHour))
+            weatherToday.value
+                .add([hour, weather!.value.hourly!.temperature2m![index]]);
+        }
+        index++;
+      });
+    }
+    // eğer forNow false ise detay sayfasındaki tarih için veri ayarlamak istiyoruzdur
+    else {
+      weatherforDetail.clear();
+      if (dateForDetail != null) {
+        weather?.value.hourly?.time?.forEach((element) {
+          var splitDate = element.replaceAll(r'T', ' ').split(' ');
+          var date = splitDate.first; // 2023-03-22
+          var hourminute = splitDate.last; // 14:00
+          var day = date.replaceAll(r'-', ' ').split(' ').last; // 22
+          var hour = hourminute.replaceAll(r':', ' ').split(' ').first;
+
+          var dayForDetail = dateForDetail
+              .replaceAll(r'T', ' ')
+              .split(' ')
+              .first
+              .replaceAll(r'-', ' ')
+              .split(' ')
+              .last; // 22
+          if (day == dayForDetail) // istenen günün tarihi olan hava durumu
+          {
+            weatherforDetail.value
+                .add([hour, weather!.value.hourly!.temperature2m![index]]);
+          }
+          index++;
+        });
+      }
+      print(weatherforDetail);
+    }
   }
 }

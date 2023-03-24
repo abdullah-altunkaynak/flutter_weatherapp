@@ -1,3 +1,4 @@
+import 'package:flutter_weatherapp/ui/daydetail_screen.dart';
 import 'package:flutter_weatherapp/ui/splash_screen.dart';
 import 'package:flutter_weatherapp/ui/weathermain_screen.dart';
 import 'package:get/get.dart';
@@ -23,5 +24,9 @@ class AppRoutes {
       name: '/splash-screen',
       page: () => SplashScreen(),
       transition: _transition,
-    )];
+    ),GetPage(
+      name: '/day-detail-screen',
+      page: () => DayDetailScreen(),
+      transition: _transition,
+    ),];
 }
